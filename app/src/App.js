@@ -1,18 +1,39 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+//BOOTSTRAP
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Nav, Navbar, Container } from 'react-bootstrap';
+
+
+import SearchForm from './components/Forms/SearchForm';
 
 function App() {
   return (
     <div className="App">
-  <header>
-		<h1>Weather App</h1>
-		<form class="search-form">
-			<input type="text" placeholder="Enter city name"/>
-			<button type="submit">Search</button>
-		</form>
-	</header>
+       <Navbar sticky='top' collapseOnSelect expand='lg' bg='dark' variant='dark'>
+    
+    <Container>
+      
+      <Navbar.Brand href='/posts'> Weather App</Navbar.Brand>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+      <Navbar.Collapse id='responsive-navbar-nav'>
+        <Nav className='me-auto'>
+     
+        </Nav>
+     
+      </Navbar.Collapse>
+      
+    </Container>
+    
+  </Navbar>
+
 	<main>
+    <SearchForm/>
+
 		<section class="weather-info">
+      
 			<div class="location">
 				<h2>Your Current Location:</h2>
 				<p class="city"></p>
