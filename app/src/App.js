@@ -25,14 +25,14 @@ function App() {
       City: '', 
       Country: '',
       Temperature: '',
-      Description: ''
+      Description: '',
+      TimeZone: ''
     })
 
 
 
   async function getWeather(e) {
     e.preventDefault()
-    console.log(userSearch)
     await fetch(
         `${backendURL}search`,
         {
@@ -45,11 +45,16 @@ function App() {
             return response.json();
     })
     .then(response => {
+      const today =  new Date()
+      const time = today.getHours()+ ":0" +  today.getMinutes() + ":" + today.getSeconds()
 
+      console.log( time)
       setWeather(prevState => ({
         ...prevState,
         City: response.name,
-        
+        Temperature: response.main.temp,
+        Country: response.sys.country,
+        TimeZone: time,
         Description: response.weather[0].description
       }))
 
@@ -61,7 +66,7 @@ function App() {
 
   return (
     <div className="App">
-       <Navbar sticky='top' collapseOnSelect expand='lg' bg='dark' variant='dark'>
+       {/* <Navbar sticky='top' collapseOnSelect expand='lg' bg='dark' variant='dark'>
     
     <Container>
       
@@ -76,7 +81,7 @@ function App() {
       
     </Container>
     
-  </Navbar>
+  </Navbar> */}
 
 	<main>
   <section className="searchbar">
@@ -89,13 +94,17 @@ function App() {
 		<section className="weather-info">
       
 			<div className="location">
-				<h2>Location: {weather.City}</h2>
+				<h2>{weather.City}, {weather.Country} </h2>
+        
 			</div>
 			<div className="temperature">
-				<h2>Current Temperature:</h2>
+				<h2>Current Temperature: {<br></br>}{weather.Temperature}</h2>
+			</div>
+      <div className="time">
+				<h2>Time: <br></br> {weather.TimeZone}</h2>
 			</div>
 			<div className="description">
-				<h2>Weather Description: {weather.Description}</h2>
+				<h2>Weather Description: <br></br> {weather.Description.toUpperCase()}</h2>
 			</div>
 		</section>
 	</main>
