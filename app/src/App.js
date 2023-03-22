@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import {React, useState}from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 //BOOTSTRAP
@@ -8,8 +8,57 @@ import { Nav, Navbar, Container } from 'react-bootstrap';
 
 
 import SearchForm from './components/Forms/SearchForm';
+const backendURL = 'http://localhost:4000/'
 
 function App() {
+
+  const [userSearch, SetUserSearch] = useState({})
+
+  function handleChange(event) {
+    console.log(event.target.value)
+
+    SetUserSearch({...userSearch, [event.target.id] : event.target.value})
+  }
+
+  const [weather, setWeather] = useState(
+    {
+      City: '', 
+      Country: '',
+      Temperature: '',
+      Description: ''
+    })
+
+
+
+  async function getWeather(e) {
+    e.preventDefault()
+    console.log(userSearch)
+    await fetch(
+        `${backendURL}search`,
+        {
+        method: "POST",
+        body: JSON.stringify(userSearch),
+        headers: new Headers({ 'content-type': 'application/json' })
+      })
+    .then(response => {
+        if (response.ok)
+            return response.json();
+    })
+    .then(response => {
+
+      setWeather(prevState => ({
+        ...prevState,
+        City: response.name,
+        
+        Description: response.weather[0].description
+      }))
+
+       
+    })
+  }
+
+
+
   return (
     <div className="App">
        <Navbar sticky='top' collapseOnSelect expand='lg' bg='dark' variant='dark'>
@@ -30,22 +79,23 @@ function App() {
   </Navbar>
 
 	<main>
-    <SearchForm/>
+  <section className="searchbar">
+      <form  onChange={handleChange}  className="search-form">
+        <input  id="city" placeholder="Enter city name" />
+        <button onClick={getWeather} type="submit">Search</button>
+      </form>
+    </section>
 
-		<section class="weather-info">
+		<section className="weather-info">
       
-			<div class="location">
-				<h2>Your Current Location:</h2>
-				<p class="city"></p>
-				<p class="country"></p>
+			<div className="location">
+				<h2>Location: {weather.City}</h2>
 			</div>
-			<div class="temperature">
+			<div className="temperature">
 				<h2>Current Temperature:</h2>
-				<p class="temp"></p>
 			</div>
-			<div class="description">
-				<h2>Weather Description:</h2>
-				<p class="desc"></p>
+			<div className="description">
+				<h2>Weather Description: {weather.Description}</h2>
 			</div>
 		</section>
 	</main>
